@@ -1,0 +1,38 @@
+[
+  {
+    "id": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "email": "222967560@mycput.ac.za",
+    "displayName": "Jeorge",
+    "passwordHash": "2fca63295c09d0867829556056b4dcb5:de0c7247db885dd7816e5025cb7b0d046a1dfac9f346eed06a633f97b375da875386e7781dec67ce3739adb5dc63fc79fa2ba61d713c28e85f7f8f81d4f304d5",
+    "role": "reporter",
+    "reporterStatus": "approved",
+    "createdAt": "2026-04-03T15:03:18.369Z"
+  },
+  {
+    "id": "user-bde498d8-0bb5-4901-a4f6-547b2be1ce39",
+    "email": "jeorgemanuel04@gmail.com",
+    "displayName": "Amanda",
+    "passwordHash": "3076e60693ae64add3342678da1863f3:435a5093c5015cd5335f9d83392918d2add6643bcdd555a3f3247383ffaea5fd7963dabca76e52eb3297479d39e3b21e712d37edd7ed6ebc869f6212ffe9d84d",
+    "role": "reporter",
+    "reporterStatus": "approved",
+    "createdAt": "2026-04-03T15:38:39.808Z"
+  },
+  {
+    "id": "user-cfcbed16-f8bf-44c7-8376-5fa585dd5f8d",
+    "email": "hilariodouglasmanuel@gmail.com",
+    "displayName": "Hilario",
+    "passwordHash": "34de50380a5cc27c8f980a9e1f25a1ae:d145d7f8df4a1d01136942a4e24ef8017fe6726e6db791403bbc9337abd2bdf4e4b391b0bacccdb18beef93c3dce109d7fd891f52a8a01d2fbaae645e3a011a7",
+    "role": "reporter",
+    "reporterStatus": "approved",
+    "createdAt": "2026-04-03T15:47:34.062Z"
+  },
+  {
+    "id": "user-1da0cdee-30c6-46ee-804d-ad4161edf395",
+    "email": "jeorgemanuel@icloud.com",
+    "displayName": "John Doe",
+    "passwordHash": "dcd1bf16e5420d1980dd33d72a4a87eb:e6aa7127b11b4cd91ce48222965446e5f9bb6a9e9cc5fb7a9eed6cf6e5beea2f60c9ccfa928a22cc184d46b75889635ebf43eb6c053457e36a555c94746d8e5b",
+    "role": "reporter",
+    "reporterStatus": "approved",
+    "createdAt": "2026-04-03T21:09:50.611Z"
+  }
+]

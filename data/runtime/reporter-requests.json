@@ -1,0 +1,38 @@
+[
+  {
+    "id": "request-bcd6efeb-73b6-4475-a0c3-8713cdcd7037",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "motivation": null,
+    "status": "approved",
+    "createdAt": "2026-04-03T15:04:24.781Z",
+    "reviewedByAdminId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "reviewedAt": "2026-04-03T21:10:49.416Z"
+  },
+  {
+    "id": "request-6b6cf957-2af1-4403-850b-f9c6b1e06855",
+    "userId": "user-bde498d8-0bb5-4901-a4f6-547b2be1ce39",
+    "motivation": null,
+    "status": "approved",
+    "createdAt": "2026-04-03T15:38:58.407Z",
+    "reviewedByAdminId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "reviewedAt": "2026-04-03T15:44:40.451Z"
+  },
+  {
+    "id": "request-a0697055-051f-4c50-92e1-ba5e03910a0a",
+    "userId": "user-cfcbed16-f8bf-44c7-8376-5fa585dd5f8d",
+    "motivation": null,
+    "status": "approved",
+    "createdAt": "2026-04-03T15:47:41.970Z",
+    "reviewedByAdminId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "reviewedAt": "2026-04-03T15:47:50.946Z"
+  },
+  {
+    "id": "request-dea92a63-cc69-4060-b33a-305ff374a448",
+    "userId": "user-1da0cdee-30c6-46ee-804d-ad4161edf395",
+    "motivation": "I really like this project",
+    "status": "approved",
+    "createdAt": "2026-04-03T21:10:31.994Z",
+    "reviewedByAdminId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "reviewedAt": "2026-04-03T21:10:44.216Z"
+  }
+]

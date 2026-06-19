@@ -1,0 +1,92 @@
+[
+  {
+    "id": "session-40efe5bb-e548-40b4-b991-a4f27f649f11",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "bellville-d6",
+    "startedAt": "2026-04-03T15:03:46.599Z",
+    "endedAt": "2026-04-03T15:04:50.340Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-19aefda3-d801-4a5e-a96f-fc496517202c",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "bellville-d6",
+    "startedAt": "2026-04-03T15:04:54.916Z",
+    "endedAt": "2026-04-03T15:36:32.316Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-c6e27cdc-e4b6-4c91-a5d0-ed6314ad3d2d",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T15:36:32.584Z",
+    "endedAt": "2026-04-03T15:43:54.521Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-1abe0f45-2733-491f-a949-16d76f4914f3",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T15:44:06.314Z",
+    "endedAt": "2026-04-03T19:57:29.029Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-b41f1724-401a-4160-a259-f3db48048817",
+    "userId": "user-bde498d8-0bb5-4901-a4f6-547b2be1ce39",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T15:45:01.409Z",
+    "endedAt": null,
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-bbf53af5-6c0d-41b5-b905-532c7a95c807",
+    "userId": "user-cfcbed16-f8bf-44c7-8376-5fa585dd5f8d",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T15:47:54.187Z",
+    "endedAt": null,
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-85d3b78b-b4c0-4cc4-8e86-e46a368edaa0",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T19:57:44.766Z",
+    "endedAt": "2026-04-04T19:31:21.486Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-9a86f2ce-e8ae-4e1c-8089-e51099c98cc4",
+    "userId": "user-1da0cdee-30c6-46ee-804d-ad4161edf395",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-03T21:10:54.153Z",
+    "endedAt": "2026-04-06T11:34:39.717Z",
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-794e52a1-3872-4b92-9129-6e9ff9e511ec",
+    "userId": "user-1da0cdee-30c6-46ee-804d-ad4161edf395",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-06T11:34:43.093Z",
+    "endedAt": null,
+    "isMuted": false,
+    "isFlagged": false
+  },
+  {
+    "id": "session-fbbefab8-bdc4-4939-915d-5535d202a30e",
+    "userId": "user-86827817-7f5c-4279-9502-21c9ba31fb9a",
+    "routeId": "test-pathjson",
+    "startedAt": "2026-04-12T20:17:11.894Z",
+    "endedAt": null,
+    "isMuted": false,
+    "isFlagged": false
+  }
+]
