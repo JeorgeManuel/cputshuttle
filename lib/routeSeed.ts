@@ -1,5 +1,4 @@
 import route from "@/data/routes/bellville-d6.json";
-import testRoute from "@/data/routes/test-path-seed.json";
 import type { ShuttleRouteSeed } from "@/types/route";
 
 export function getBellvilleD6Route(): ShuttleRouteSeed {
@@ -7,7 +6,7 @@ export function getBellvilleD6Route(): ShuttleRouteSeed {
 }
 
 export function getAllRoutes(): ShuttleRouteSeed[] {
-  return [route as ShuttleRouteSeed, testRoute as ShuttleRouteSeed];
+  return [route as ShuttleRouteSeed];
 }
 
 export function getRouteById(routeId: string): ShuttleRouteSeed | null {
