@@ -23,6 +23,15 @@ create table if not exists routes (
   created_at timestamptz not null default now()
 );
 
+-- Auth sessions (used by lib/auth.ts for bearer tokens)
+create table if not exists sessions (
+  token text primary key,
+  user_id uuid not null references users(id) on delete cascade,
+  created_at timestamptz not null,
+  expires_at timestamptz not null
+);
+
+
 create table if not exists route_paths (
   id uuid primary key default gen_random_uuid(),
   route_id uuid not null references routes(id) on delete cascade,

@@ -5,19 +5,30 @@ import type {
   StoredUser
 } from "./storage";
 
+// Re-exported for debugging/UI; not used for backend selection.
 export { runtimeFilePaths } from "./storage-json";
 
 const usePostgres = Boolean(process.env.POSTGRES_URL ?? process.env.DATABASE_URL);
 const useEdgeConfig = Boolean(process.env.EDGE_CONFIG);
+
+// On Vercel, JSON filesystem writes will fail (EROFS). We therefore:
+// - prefer Postgres when configured
+// - otherwise require Edge Config when configured
+// - do NOT fall back to JSON on Vercel
+const onVercel = process.env.VERCEL === "1";
+const effectiveUseEdgeConfig = useEdgeConfig || (onVercel && !usePostgres);
+
+
 
 // Note: we avoid conditional exports (not supported well by TS).
 // Instead, each function delegates at runtime.
 
 async function pickStorage() {
   if (usePostgres) return await import("./storage-postgres");
-  if (useEdgeConfig) return await import("./storage-edge-config");
+  if (effectiveUseEdgeConfig) return await import("./storage-edge-config");
   return await import("./storage-json");
 }
+
 
 export async function getUsers(): Promise<StoredUser[]> {
   const storage = await pickStorage();
