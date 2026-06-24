@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthHeaders } from "@/lib/client-auth";
 
 type PendingRequest = {
   id: string;
@@ -12,22 +13,11 @@ type PendingRequest = {
 };
 
 export default function AdminPage() {
-  const [token, setToken] = useState<string | null>(null);
+  const { headers } = useAuthHeaders();
   const [pending, setPending] = useState<PendingRequest[]>([]);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setToken(localStorage.getItem("st_token"));
-  }, []);
-
-  const headers = useMemo(() => {
-    if (!token) return null;
-    return {
-      Authorization: `Bearer ${token}`
-    };
-  }, [token]);
 
   async function loadPending() {
     if (!headers) {

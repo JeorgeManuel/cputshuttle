@@ -1,14 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-
-type UserInfo = {
-  id: string;
-  email: string;
-  displayName: string;
-  role: string;
-  reporterStatus: string;
-};
+import { useEffect, useRef, useState } from "react";
+import { useAuthHeaders } from "@/lib/client-auth";
 
 type SessionResponse = {
   id: string;
@@ -47,8 +40,7 @@ function describeGeoError(error: GeolocationPositionError): string {
 }
 
 export default function ReporterPage() {
-  const [user, setUser] = useState<UserInfo | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const { token, user, headers } = useAuthHeaders();
   const [sessionId, setSessionId] = useState<string>("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
@@ -60,21 +52,10 @@ export default function ReporterPage() {
   const autoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("st_token");
-    const storedUser = localStorage.getItem("st_user");
     const storedSession = localStorage.getItem("st_reporter_session_id");
-    setToken(storedToken);
     setSessionId(storedSession ?? "");
     const savedRoute = localStorage.getItem("st_selected_route_id");
     if (savedRoute) setSelectedRouteId(savedRoute);
-
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser) as UserInfo);
-      } catch {
-        setUser(null);
-      }
-    }
   }, []);
 
   useEffect(() => {
@@ -90,14 +71,6 @@ export default function ReporterPage() {
 
     loadRoutes();
   }, []);
-
-  const headers = useMemo(() => {
-    if (!token) return null;
-    return {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    };
-  }, [token]);
 
   function stopAutoSharing() {
     if (autoTimerRef.current) {
