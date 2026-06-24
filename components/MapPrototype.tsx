@@ -21,15 +21,23 @@ export default function MapPrototype() {
 
   useEffect(() => {
     async function loadRoutes() {
-      const response = await fetch("/api/v1/routes");
-      const data = (await response.json()) as RouteResponse;
-      const loadedRoutes = data.routes ?? [];
-      setRoutes(loadedRoutes);
+      try {
+        const response = await fetch("/api/v1/routes");
+        if (!response.ok) {
+          console.error("Failed to load routes:", response.status);
+          return;
+        }
+        const data = (await response.json()) as RouteResponse;
+        const loadedRoutes = data.routes ?? [];
+        setRoutes(loadedRoutes);
 
-      const saved = localStorage.getItem("st_map_route_id");
-      const hasSaved = saved && loadedRoutes.some((item) => item.id === saved);
-      const nextId = hasSaved ? (saved as string) : loadedRoutes[0]?.id ?? "";
-      setSelectedRouteId(nextId);
+        const saved = localStorage.getItem("st_map_route_id");
+        const hasSaved = saved && loadedRoutes.some((item) => item.id === saved);
+        const nextId = hasSaved ? (saved as string) : loadedRoutes[0]?.id ?? "";
+        setSelectedRouteId(nextId);
+      } catch (error) {
+        console.error("Network error while loading routes:", error);
+      }
     }
 
     loadRoutes();
@@ -42,10 +50,18 @@ export default function MapPrototype() {
     let active = true;
 
     async function loadLive() {
-      const response = await fetch(`/api/v1/routes/${routeId}/live`);
-      const data = (await response.json()) as LiveResponse;
-      if (active) {
-        setEstimates(data.estimates ?? []);
+      try {
+        const response = await fetch(`/api/v1/routes/${routeId}/live`);
+        if (!response.ok) {
+          console.error("Failed to load live estimates:", response.status);
+          return;
+        }
+        const data = (await response.json()) as LiveResponse;
+        if (active) {
+          setEstimates(data.estimates ?? []);
+        }
+      } catch (error) {
+        console.error("Network error while loading live estimates:", error);
       }
     }
 

@@ -39,22 +39,26 @@ export default function AdminPage() {
     setError("");
     setStatus("");
 
-    const response = await fetch("/api/v1/admin/reporter-requests", {
-      headers
-    });
-    const data = (await response.json()) as {
-      error?: string;
-      pending?: PendingRequest[];
-    };
+    try {
+      const response = await fetch("/api/v1/admin/reporter-requests", {
+        headers
+      });
+      const data = (await response.json()) as {
+        error?: string;
+        pending?: PendingRequest[];
+      };
 
-    if (!response.ok) {
-      setError(data.error ?? "Could not load pending requests");
+      if (!response.ok) {
+        setError(data.error ?? "Could not load pending requests");
+        return;
+      }
+
+      setPending(data.pending ?? []);
+    } catch {
+      setError("Network error while loading pending requests");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setPending(data.pending ?? []);
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -71,23 +75,27 @@ export default function AdminPage() {
     setError("");
     setStatus("");
 
-    const response = await fetch(
-      `/api/v1/admin/reporter-requests/${requestId}/approve`,
-      {
-        method: "POST",
-        headers
+    try {
+      const response = await fetch(
+        `/api/v1/admin/reporter-requests/${requestId}/approve`,
+        {
+          method: "POST",
+          headers
+        }
+      );
+
+      const data = (await response.json()) as { error?: string; requestId?: string };
+
+      if (!response.ok) {
+        setError(data.error ?? "Could not approve request");
+        return;
       }
-    );
 
-    const data = (await response.json()) as { error?: string; requestId?: string };
-
-    if (!response.ok) {
-      setError(data.error ?? "Could not approve request");
-      return;
+      setPending((current) => current.filter((item) => item.id !== requestId));
+      setStatus(`Approved reporter request ${data.requestId ?? requestId}`);
+    } catch {
+      setError("Network error while approving request");
     }
-
-    setPending((current) => current.filter((item) => item.id !== requestId));
-    setStatus(`Approved reporter request ${data.requestId ?? requestId}`);
   }
 
   return (
