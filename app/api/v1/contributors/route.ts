@@ -9,6 +9,7 @@ type Contributor = {
 };
 
 export async function GET() {
+  try {
   const users = await getUsers();
 
   const admins: Contributor[] = users
@@ -42,4 +43,11 @@ export async function GET() {
     admins,
     reporters
   });
+  } catch (error) {
+    console.error("GET /api/v1/contributors failed:", error);
+    return NextResponse.json(
+      { error: "internal_server_error" },
+      { status: 500 }
+    );
+  }
 }

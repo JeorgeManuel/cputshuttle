@@ -12,6 +12,7 @@ type SessionPayload = {
 };
 
 export async function POST(request: Request) {
+  try {
   const token = getBearerToken(request);
   if (!token) {
     return NextResponse.json({ error: "auth_required" }, { status: 401 });
@@ -22,7 +23,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_session" }, { status: 401 });
   }
 
-  const body = (await request.json()) as SessionPayload;
+  let body: SessionPayload;
+  try {
+    body = (await request.json()) as SessionPayload;
+  } catch {
+    return NextResponse.json(
+      { error: "invalid_request_body" },
+      { status: 400 }
+    );
+  }
 
   const route = body?.routeId ? getRouteById(body.routeId) : null;
   if (!route) {
@@ -65,4 +74,11 @@ export async function POST(request: Request) {
     session,
     { status: 201 }
   );
+  } catch (error) {
+    console.error("POST /api/v1/reporter-sessions failed:", error);
+    return NextResponse.json(
+      { error: "internal_server_error" },
+      { status: 500 }
+    );
+  }
 }

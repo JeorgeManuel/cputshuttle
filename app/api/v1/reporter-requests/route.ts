@@ -12,6 +12,7 @@ type ReporterRequestPayload = {
 };
 
 export async function POST(request: Request) {
+  try {
   const token = getBearerToken(request);
   if (!token) {
     return NextResponse.json({ error: "auth_required" }, { status: 401 });
@@ -22,7 +23,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_session" }, { status: 401 });
   }
 
-  const body = (await request.json()) as ReporterRequestPayload;
+  let body: ReporterRequestPayload;
+  try {
+    body = (await request.json()) as ReporterRequestPayload;
+  } catch {
+    return NextResponse.json(
+      { error: "invalid_request_body" },
+      { status: 400 }
+    );
+  }
   const requests = await getReporterRequests();
 
   const existingPending = requests.find(
@@ -73,4 +82,11 @@ export async function POST(request: Request) {
     },
     { status: 201 }
   );
+  } catch (error) {
+    console.error("POST /api/v1/reporter-requests failed:", error);
+    return NextResponse.json(
+      { error: "internal_server_error" },
+      { status: 500 }
+    );
+  }
 }
