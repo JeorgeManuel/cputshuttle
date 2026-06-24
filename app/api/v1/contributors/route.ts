@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getUsers } from "@/lib/storage";
 
 type Contributor = {
-  id: string;
   displayName: string;
   roleLabel: string;
   joinedAt: string;
@@ -14,7 +13,6 @@ export async function GET() {
   const admins: Contributor[] = users
     .filter((user) => user.role === "admin")
     .map((user) => ({
-      id: user.id,
       displayName: user.displayName,
       roleLabel: "Admin",
       joinedAt: user.createdAt
@@ -25,7 +23,6 @@ export async function GET() {
       (user) => user.reporterStatus === "approved" || user.role === "reporter"
     )
     .map((user) => ({
-      id: user.id,
       displayName: user.displayName,
       roleLabel: user.role === "admin" ? "Admin Reporter" : "Reporter",
       joinedAt: user.createdAt
