@@ -39,7 +39,13 @@ async function readJsonArray<T>(filePath: string): Promise<T[]> {
   await ensureRuntimeFiles();
   const raw = await fs.readFile(filePath, "utf8");
   if (!raw.trim()) return [];
-  return JSON.parse(raw) as T[];
+  try {
+    return JSON.parse(raw) as T[];
+  } catch (error) {
+    console.error(`Corrupt JSON in ${filePath}, resetting to empty array:`, error);
+    await fs.writeFile(filePath, "[\n]\n", "utf8");
+    return [];
+  }
 }
 
 async function writeJsonArray<T>(filePath: string, data: T[]): Promise<void> {
@@ -96,7 +102,15 @@ export async function readRecentPingEvents(limit = 200): Promise<unknown[]> {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  return lines.slice(-limit).map((line) => JSON.parse(line));
+  const results: unknown[] = [];
+  for (const line of lines.slice(-limit)) {
+    try {
+      results.push(JSON.parse(line));
+    } catch {
+      console.error("Skipping malformed NDJSON line in ping-events");
+    }
+  }
+  return results;
 }
 
 export function runtimeFilePaths() {

@@ -19,6 +19,7 @@ const REJECT_ACCURACY_M = Number(process.env.REJECT_ACCURACY_M ?? "1200");
 const CORRIDOR_BUFFER_M = 100;
 
 export async function POST(request: Request) {
+  try {
   const token = getBearerToken(request);
   if (!token) {
     return NextResponse.json({ accepted: false, reason: "auth_required" }, { status: 401 });
@@ -29,7 +30,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ accepted: false, reason: "invalid_session" }, { status: 401 });
   }
 
-  const payload = (await request.json()) as PingPayload;
+  let payload: PingPayload;
+  try {
+    payload = (await request.json()) as PingPayload;
+  } catch {
+    return NextResponse.json(
+      { accepted: false, reason: "invalid_request_body" },
+      { status: 400 }
+    );
+  }
   const receivedAtServer = new Date().toISOString();
 
   const recordEvent = async (accepted: boolean, reason: string | null) => {
@@ -131,4 +140,11 @@ export async function POST(request: Request) {
     matchedRouteId: route.id,
     receivedAtServer
   });
+  } catch (error) {
+    console.error("POST /api/v1/location-pings failed:", error);
+    return NextResponse.json(
+      { accepted: false, reason: "internal_server_error" },
+      { status: 500 }
+    );
+  }
 }

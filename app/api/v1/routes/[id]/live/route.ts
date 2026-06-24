@@ -30,6 +30,7 @@ export async function GET(
   _request: Request,
   context: { params: { id: string } }
 ) {
+  try {
   const route = getRouteById(context.params.id);
   if (!route) {
     return NextResponse.json({ error: "Route not found" }, { status: 404 });
@@ -168,4 +169,11 @@ export async function GET(
   });
 
   return NextResponse.json({ estimates });
+  } catch (error) {
+    console.error(`GET /api/v1/routes/${context.params.id}/live failed:`, error);
+    return NextResponse.json(
+      { error: "internal_server_error" },
+      { status: 500 }
+    );
+  }
 }

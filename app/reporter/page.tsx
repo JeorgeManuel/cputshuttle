@@ -79,12 +79,20 @@ export default function ReporterPage() {
 
   useEffect(() => {
     async function loadRoutes() {
-      const response = await fetch("/api/v1/routes");
-      const data = (await response.json()) as { routes: RouteSummary[] };
-      setRoutes(data.routes ?? []);
+      try {
+        const response = await fetch("/api/v1/routes");
+        if (!response.ok) {
+          setError("Could not load routes from server");
+          return;
+        }
+        const data = (await response.json()) as { routes: RouteSummary[] };
+        setRoutes(data.routes ?? []);
 
-      if (!localStorage.getItem("st_selected_route_id") && data.routes?.length) {
-        setSelectedRouteId(data.routes[0].id);
+        if (!localStorage.getItem("st_selected_route_id") && data.routes?.length) {
+          setSelectedRouteId(data.routes[0].id);
+        }
+      } catch {
+        setError("Network error while loading routes");
       }
     }
 
@@ -121,30 +129,34 @@ export default function ReporterPage() {
       return;
     }
 
-    const response = await fetch("/api/v1/location-pings", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        routeId: selectedRouteId,
-        sessionId,
-        lat,
-        lng,
-        accuracyM,
-        capturedAtClient: new Date().toISOString()
-      })
-    });
+    try {
+      const response = await fetch("/api/v1/location-pings", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          routeId: selectedRouteId,
+          sessionId,
+          lat,
+          lng,
+          accuracyM,
+          capturedAtClient: new Date().toISOString()
+        })
+      });
 
-    const data = (await response.json()) as {
-      accepted: boolean;
-      reason: string | null;
-    };
+      const data = (await response.json()) as {
+        accepted: boolean;
+        reason: string | null;
+      };
 
-    if (!response.ok || !data.accepted) {
-      setError(`Ping rejected: ${data.reason ?? "unknown_reason"}`);
-      return;
+      if (!response.ok || !data.accepted) {
+        setError(`Ping rejected: ${data.reason ?? "unknown_reason"}`);
+        return;
+      }
+
+      setStatus("Ping accepted and recorded for analysis");
+    } catch {
+      setError("Network error while sending ping");
     }
-
-    setStatus("Ping accepted and recorded for analysis");
   }
 
   async function locateAndPostPing() {
@@ -206,19 +218,23 @@ export default function ReporterPage() {
     setError("");
     setStatus("");
 
-    const response = await fetch("/api/v1/reporter-requests", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ motivation })
-    });
-    const data = (await response.json()) as { error?: string; id?: string };
+    try {
+      const response = await fetch("/api/v1/reporter-requests", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ motivation })
+      });
+      const data = (await response.json()) as { error?: string; id?: string };
 
-    if (!response.ok) {
-      setError(data.error ?? "Could not create reporter request");
-      return;
+      if (!response.ok) {
+        setError(data.error ?? "Could not create reporter request");
+        return;
+      }
+
+      setStatus(`Reporter request submitted (${data.id})`);
+    } catch {
+      setError("Network error while requesting reporter access");
     }
-
-    setStatus(`Reporter request submitted (${data.id})`);
   }
 
   async function startReporterSession() {
@@ -230,23 +246,27 @@ export default function ReporterPage() {
     setError("");
     setStatus("");
 
-    const response = await fetch("/api/v1/reporter-sessions", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ routeId: selectedRouteId })
-    });
+    try {
+      const response = await fetch("/api/v1/reporter-sessions", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ routeId: selectedRouteId })
+      });
 
-    const data = (await response.json()) as SessionResponse | { error?: string };
-    if (!response.ok) {
-      setError((data as { error?: string }).error ?? "Could not start session");
-      return;
+      const data = (await response.json()) as SessionResponse | { error?: string };
+      if (!response.ok) {
+        setError((data as { error?: string }).error ?? "Could not start session");
+        return;
+      }
+
+      const session = data as SessionResponse;
+      setSessionId(session.id);
+      localStorage.setItem("st_reporter_session_id", session.id);
+      localStorage.setItem("st_selected_route_id", selectedRouteId);
+      setStatus(`Reporter session active: ${session.id}`);
+    } catch {
+      setError("Network error while starting reporter session");
     }
-
-    const session = data as SessionResponse;
-    setSessionId(session.id);
-    localStorage.setItem("st_reporter_session_id", session.id);
-    localStorage.setItem("st_selected_route_id", selectedRouteId);
-    setStatus(`Reporter session active: ${session.id}`);
   }
 
   async function stopReporterSession() {
@@ -258,21 +278,25 @@ export default function ReporterPage() {
     setError("");
     setStatus("");
 
-    const response = await fetch(`/api/v1/reporter-sessions/${sessionId}/stop`, {
-      method: "POST",
-      headers
-    });
-    const data = (await response.json()) as { error?: string };
+    try {
+      const response = await fetch(`/api/v1/reporter-sessions/${sessionId}/stop`, {
+        method: "POST",
+        headers
+      });
+      const data = (await response.json()) as { error?: string };
 
-    if (!response.ok) {
-      setError(data.error ?? "Could not stop session");
-      return;
+      if (!response.ok) {
+        setError(data.error ?? "Could not stop session");
+        return;
+      }
+
+      stopAutoSharing();
+      localStorage.removeItem("st_reporter_session_id");
+      setSessionId("");
+      setStatus("Reporter session stopped");
+    } catch {
+      setError("Network error while stopping reporter session");
     }
-
-    stopAutoSharing();
-    localStorage.removeItem("st_reporter_session_id");
-    setSessionId("");
-    setStatus("Reporter session stopped");
   }
 
   async function sendPing() {
