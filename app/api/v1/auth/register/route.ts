@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSessionForUser, createUserId } from "@/lib/auth";
 import { getUsers, hashPassword, saveUsers } from "@/lib/storage";
+import { isRateLimited } from "@/lib/rate-limit";
 
 type RegisterPayload = {
   email: string;
@@ -9,6 +10,13 @@ type RegisterPayload = {
 };
 
 export async function POST(request: Request) {
+  if (isRateLimited(request, "register")) {
+    return NextResponse.json(
+      { error: "too_many_requests" },
+      { status: 429 }
+    );
+  }
+
   const body = (await request.json()) as RegisterPayload;
 
   if (!body?.email || !body?.password) {

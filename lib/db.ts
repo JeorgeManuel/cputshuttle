@@ -9,7 +9,7 @@ export const pool: Pool =
   globalForPool.__pool ??
   new Pool({
     connectionString,
-  ssl: connectionString ? { rejectUnauthorized: false } : undefined,
+    ssl: connectionString ? { rejectUnauthorized: true } : undefined,
     max: 1,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 30000

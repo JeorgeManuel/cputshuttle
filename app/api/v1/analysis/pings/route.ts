@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getBearerToken, getUserFromToken } from "@/lib/auth";
-import { readRecentPingEvents, runtimeFilePaths } from "@/lib/storage";
+import { readRecentPingEvents } from "@/lib/storage";
 
 export async function GET(request: Request) {
   const token = getBearerToken(request);
@@ -19,7 +19,6 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     count: events.length,
-    runtimeFile: runtimeFilePaths().pingEventsFile,
     events
   });
 }
