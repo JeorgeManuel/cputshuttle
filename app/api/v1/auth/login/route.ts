@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSessionForUser } from "@/lib/auth";
+import { sanitizeUser } from "@/lib/api-helpers";
 import { getUsers, verifyPassword } from "@/lib/storage";
 
 type LoginPayload = {
@@ -29,13 +30,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     token: session.token,
-    user: {
-      id: user.id,
-      email: user.email,
-      displayName: user.displayName,
-      role: user.role,
-      reporterStatus: user.reporterStatus,
-      createdAt: user.createdAt
-    }
+    user: sanitizeUser(user)
   });
 }

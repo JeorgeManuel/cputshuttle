@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isWithinCorridor } from "@/lib/geo";
 import { getRouteById } from "@/lib/routeSeed";
-import { getBearerToken, getUserFromToken } from "@/lib/auth";
+import { requireAuth } from "@/lib/api-helpers";
 import { appendPingEvent, getReporterSessions } from "@/lib/storage";
 import type { LatLng } from "@/types/route";
 
@@ -19,15 +19,14 @@ const REJECT_ACCURACY_M = Number(process.env.REJECT_ACCURACY_M ?? "1200");
 const CORRIDOR_BUFFER_M = 100;
 
 export async function POST(request: Request) {
-  const token = getBearerToken(request);
-  if (!token) {
-    return NextResponse.json({ accepted: false, reason: "auth_required" }, { status: 401 });
+  const auth = await requireAuth(request);
+  if (auth.response) {
+    return NextResponse.json(
+      { accepted: false, reason: "auth_required" },
+      { status: 401 }
+    );
   }
-
-  const user = await getUserFromToken(token);
-  if (!user) {
-    return NextResponse.json({ accepted: false, reason: "invalid_session" }, { status: 401 });
-  }
+  const user = auth.user;
 
   const payload = (await request.json()) as PingPayload;
   const receivedAtServer = new Date().toISOString();

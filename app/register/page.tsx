@@ -1,17 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-type AuthResult = {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    displayName: string;
-    role: string;
-    reporterStatus: string;
-  };
-};
+import { saveAuth } from "@/lib/client-auth";
+import type { AuthResponse } from "@/types/auth";
 
 export default function RegisterPage() {
   const [displayName, setDisplayName] = useState("");
@@ -34,15 +25,14 @@ export default function RegisterPage() {
         body: JSON.stringify({ displayName, email, password })
       });
 
-      const data = (await response.json()) as AuthResult | { error: string };
+      const data = (await response.json()) as AuthResponse | { error: string };
       if (!response.ok) {
         setError((data as { error?: string }).error ?? "Registration failed");
         return;
       }
 
-      const result = data as AuthResult;
-      localStorage.setItem("st_token", result.token);
-      localStorage.setItem("st_user", JSON.stringify(result.user));
+      const result = data as AuthResponse;
+      saveAuth(result);
       setStatus(
         `Account created for ${result.user.email}. You are now logged in.`
       );

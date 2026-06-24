@@ -1,17 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-type AuthResult = {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    displayName: string;
-    role: string;
-    reporterStatus: string;
-  };
-};
+import { saveAuth } from "@/lib/client-auth";
+import type { AuthResponse } from "@/types/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -33,15 +24,14 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password })
       });
 
-      const data = (await response.json()) as AuthResult | { error: string };
+      const data = (await response.json()) as AuthResponse | { error: string };
       if (!response.ok) {
         setError((data as { error?: string }).error ?? "Login failed");
         return;
       }
 
-      const result = data as AuthResult;
-      localStorage.setItem("st_token", result.token);
-      localStorage.setItem("st_user", JSON.stringify(result.user));
+      const result = data as AuthResponse;
+      saveAuth(result);
       setStatus(`Logged in as ${result.user.displayName} (${result.user.role})`);
     } catch {
       setError("Network error while logging in");

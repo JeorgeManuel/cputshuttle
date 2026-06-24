@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createRequestId, getBearerToken, getUserFromToken } from "@/lib/auth";
+import { createRequestId } from "@/lib/auth";
+import { requireAuth } from "@/lib/api-helpers";
 import {
   getReporterRequests,
   saveReporterRequests,
@@ -12,15 +13,9 @@ type ReporterRequestPayload = {
 };
 
 export async function POST(request: Request) {
-  const token = getBearerToken(request);
-  if (!token) {
-    return NextResponse.json({ error: "auth_required" }, { status: 401 });
-  }
-
-  const user = await getUserFromToken(token);
-  if (!user) {
-    return NextResponse.json({ error: "invalid_session" }, { status: 401 });
-  }
+  const auth = await requireAuth(request);
+  if (auth.response) return auth.response;
+  const user = auth.user;
 
   const body = (await request.json()) as ReporterRequestPayload;
   const requests = await getReporterRequests();
