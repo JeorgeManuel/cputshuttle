@@ -18,62 +18,67 @@ const useEdgeConfig = Boolean(process.env.EDGE_CONFIG);
 const onVercel = process.env.VERCEL === "1";
 const effectiveUseEdgeConfig = useEdgeConfig || (onVercel && !usePostgres);
 
-async function pickStorage() {
+async function pickReadStorage() {
   if (usePostgres) return await import("./storage-postgres");
   if (effectiveUseEdgeConfig) return await import("./storage-edge-config");
   return await import("./storage-json");
 }
 
+async function pickWriteStorage() {
+  if (usePostgres) return await import("./storage-postgres");
+  return await import("./storage-json");
+}
+
 export async function getUsers(): Promise<StoredUser[]> {
-  const storage = await pickStorage();
+  const storage = await pickReadStorage();
   return storage.getUsers();
 }
 
 export async function saveUsers(users: StoredUser[]): Promise<void> {
-  const storage = await pickStorage();
+  const storage = await pickWriteStorage();
   return storage.saveUsers(users);
 }
 
 export async function getSessions(): Promise<StoredSession[]> {
-  const storage = await pickStorage();
+  const storage = await pickReadStorage();
   return storage.getSessions();
 }
 
 export async function saveSessions(sessions: StoredSession[]): Promise<void> {
-  const storage = await pickStorage();
+  const storage = await pickWriteStorage();
   return storage.saveSessions(sessions);
 }
 
 export async function getReporterRequests(): Promise<StoredReporterRequest[]> {
-  const storage = await pickStorage();
+  const storage = await pickReadStorage();
   return storage.getReporterRequests();
 }
 
 export async function saveReporterRequests(
   requests: StoredReporterRequest[]
 ): Promise<void> {
-  const storage = await pickStorage();
+  const storage = await pickWriteStorage();
   return storage.saveReporterRequests(requests);
 }
 
 export async function getReporterSessions(): Promise<StoredReporterSession[]> {
-  const storage = await pickStorage();
+  const storage = await pickReadStorage();
   return storage.getReporterSessions();
 }
 
 export async function saveReporterSessions(
   sessions: StoredReporterSession[]
 ): Promise<void> {
-  const storage = await pickStorage();
+  const storage = await pickWriteStorage();
   return storage.saveReporterSessions(sessions);
 }
 
 export async function appendPingEvent(event: unknown): Promise<void> {
-  const storage = await pickStorage();
+  const storage = await pickWriteStorage();
   return storage.appendPingEvent(event);
 }
 
 export async function readRecentPingEvents(limit = 200): Promise<unknown[]> {
-  const storage = await pickStorage();
+  const storage = await pickReadStorage();
   return storage.readRecentPingEvents(limit);
 }
