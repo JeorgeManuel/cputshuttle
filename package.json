@@ -10,7 +10,8 @@
     "tunnel:3001": "lt --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@types/geojson": "^7946.0.14",
+    "@types/jest": "^30.0.0",
     "@types/leaflet": "^1.9.12",
     "@types/node": "^20.14.12",
     "@types/pg": "^8.20.0",
@@ -29,7 +31,9 @@
     "@types/react-dom": "^18.3.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.35",
+    "jest": "^30.4.2",
     "localtunnel": "^2.0.2",
+    "ts-jest": "^29.4.11",
     "typescript": "5.4.5"
   }
 }
